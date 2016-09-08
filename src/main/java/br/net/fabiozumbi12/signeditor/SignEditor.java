@@ -58,7 +58,7 @@ public class SignEditor {
 								src.sendMessage(toText("[SignEditor] &4The line need to be below 1-4."));
 								return CommandResult.empty();
 							}
-							if (text.length() > 16){
+							if (toText(text).toPlain().length() > 16){
 								src.sendMessage(toText("[SignEditor] &4The max length allowed is 16 characters."));
 								return CommandResult.empty();
 							}
