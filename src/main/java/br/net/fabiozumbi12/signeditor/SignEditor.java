@@ -8,11 +8,8 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
-import org.spongepowered.api.command.CommandSource;
-import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.source.ConsoleSource;
-import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
 import org.spongepowered.api.entity.living.player.Player;
@@ -27,7 +24,7 @@ import org.spongepowered.api.text.serializer.TextSerializers;
 
 @Plugin(id = "br.net.fabiozumbi12.signeditor", 
 name = "SignEditor", 
-version = "1.0.0",
+version = "1.0.1",
 authors="FabioZumbi12", 
 description="Simple tool to edit sign lines.")
 public class SignEditor {
@@ -46,21 +43,15 @@ public class SignEditor {
 			    .description(Text.of("Use to edit one line of a placed sign."))
 			    .permission("signeditor.setline")
 			    .arguments(GenericArguments.integer(Text.of("1-4")),GenericArguments.remainingJoinedStrings(Text.of("text (max. length 16)")))
-			    .executor(new CommandExecutor(){
-
-					@Override
-					public CommandResult execute(CommandSource src,
-							CommandContext args) throws CommandException {
+			    .executor((src, args) -> { {
 						if (src instanceof Player){
 							int line = args.<Integer>getOne("1-4").get();
 							String text = args.<String>getOne("text (max. length 16)").get();
 							if (line > 4 || line < 1){
-								src.sendMessage(toText("[SignEditor] &4The line need to be below 1-4."));
-								return CommandResult.empty();
+								throw new CommandException(toText("[SignEditor] &4The line need to be below 1-4."));
 							}
 							if (toText(text).toPlain().length() > 16){
-								src.sendMessage(toText("[SignEditor] &4The max length allowed is 16 characters."));
-								return CommandResult.empty();
+								throw new CommandException(toText("[SignEditor] &4The max length allowed is 16 characters."));
 							}
 							
 							List<Text> lineList = Arrays.asList(Text.of(),Text.of(),Text.of(),Text.of());
@@ -69,10 +60,10 @@ public class SignEditor {
 							}
 							lineList.set(line-1, toText(text));							
 							lines.put(src.getName(), lineList);
-							src.sendMessage(toText("[SignEditor] &aLine '"+line+"' set to '"+text+"&a'. Right click on sign to paste!"));
+							src.sendMessage(toText("[SignEditor] &aLine '"+line+"' set to '&r"+text+"&a'. Click on sign to paste!"));
 							return CommandResult.success();
 						} 
-						return CommandResult.empty();
+						throw new CommandException(toText("[SignEditor] Only players can use this command."));
 					}			    	
 			    })
 			    .build();
@@ -83,11 +74,7 @@ public class SignEditor {
 			    .description(Text.of("Copy one sign text to other signs"))
 			    .permission("signeditor.copysign")
 			    .arguments(GenericArguments.optional(GenericArguments.integer(Text.of("copies"))))
-			    .executor(new CommandExecutor(){
-
-					@Override
-					public CommandResult execute(CommandSource src,
-							CommandContext args) throws CommandException {
+			    .executor((src, args) -> {
 						if (src instanceof Player){
 							signs.put(src.getName(), null);
 							if (args.hasAny("copies") && args.<Integer>getOne("copies").get() > 1){
@@ -99,8 +86,8 @@ public class SignEditor {
 							}							
 							return CommandResult.success();
 						}
-						return CommandResult.empty();
-					}})
+						throw new CommandException(toText("[SignEditor] Only players can use this command."));
+					})
 			    .build();
 		Sponge.getCommandManager().register(this, copysign, "copysign");		
 		
