@@ -4,12 +4,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.args.GenericArguments;
-import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
 import org.spongepowered.api.entity.living.player.Player;
@@ -22,9 +22,11 @@ import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
-@Plugin(id = "br.net.fabiozumbi12.signeditor", 
+import com.google.inject.Inject;
+
+@Plugin(id = "signeditor", 
 name = "SignEditor", 
-version = "1.0.1",
+version = "1.0.2",
 authors="FabioZumbi12", 
 description="Simple tool to edit sign lines.")
 public class SignEditor {
@@ -32,11 +34,13 @@ public class SignEditor {
 	private HashMap<String, List<Text>> lines = new HashMap<String, List<Text>>();
 	private HashMap<String, SignData> signs = new HashMap<String, SignData>();
 	private HashMap<String, Integer> copies = new HashMap<String, Integer>();
-	private ConsoleSource logger;
+
+	@Inject
+	Logger logger;
+	
 	
 	@Listener
     public void onServerStart(GameStartedServerEvent event) {
-		this.logger = Sponge.getServer().getConsole();
 		
 		//setline
 		CommandSpec setline = CommandSpec.builder()
@@ -92,12 +96,12 @@ public class SignEditor {
 		Sponge.getCommandManager().register(this, copysign, "copysign");		
 		
 		//done
-		logger.sendMessage(toText("SignEditor: [&aSignEditor enabled!&r]"));
+		logger.info(toColor("SignEditor: [&aSignEditor enabled!&r]"));
 	}
 	
 	@Listener
 	public void onStopServer(GameStoppingServerEvent e) {
-		logger.sendMessage(toText("SignEditor: [&4SignEditor disabled!&r]"));
+		logger.info(toColor("SignEditor: [&4SignEditor disabled!&r]"));
 	}
 	
 	@Listener
@@ -150,5 +154,9 @@ public class SignEditor {
 	
 	public static Text toText(String str){
     	return TextSerializers.FORMATTING_CODE.deserialize(str);
+    }
+	
+	public static String toColor(String str){
+    	return str.replaceAll("(&([a-fk-or0-9]))", "\u00A7$2"); 
     }
 }
