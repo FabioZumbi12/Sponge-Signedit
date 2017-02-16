@@ -26,7 +26,7 @@ import com.google.inject.Inject;
 
 @Plugin(id = "signeditor", 
 name = "SignEditor", 
-version = "1.0.2",
+version = "1.0.3",
 authors="FabioZumbi12", 
 description="Simple tool to edit sign lines.")
 public class SignEditor {
@@ -41,6 +41,27 @@ public class SignEditor {
 	
 	@Listener
     public void onServerStart(GameStartedServerEvent event) {
+		
+		//help
+		CommandSpec base = CommandSpec.builder()
+			    .description(Text.of("Main command for SignEdit."))
+			    .arguments(GenericArguments.optional(GenericArguments.string(Text.of("?"))))
+			    .executor((src, args) -> {
+			    	src.sendMessage(toText("&b---------------- SignEditor v1.0.3 ----------------"));
+			    	src.sendMessage(toText("&bDeveloped by FabioZumbi12."));
+			    	src.sendMessage(toText("&bFor more information about the commands, type [&6/signedit ?&b]."));
+			    	src.sendMessage(toText("&b---------------------------------------------------"));
+			    	
+			    	if (args.getOne("?").isPresent()){
+			    		src.sendMessage(toText("&b---------------- SignEditor v1.0.3 ----------------"));
+				    	src.sendMessage(toText("&aAvailable Commands:"));
+				    	src.sendMessage(toText("&8/setline <1-4> <text (max. length 16)> &r- &cEdit a sign line with colors."));
+				    	src.sendMessage(toText("&8/copysign <copies> &r- &cCopy one sign text to other sign."));
+				    	src.sendMessage(toText("&b---------------------------------------------------"));
+			    	}
+			    	return CommandResult.success();
+				}).build();
+		Sponge.getCommandManager().register(this, base, "signedit");	
 		
 		//setline
 		CommandSpec setline = CommandSpec.builder()
@@ -96,12 +117,12 @@ public class SignEditor {
 		Sponge.getCommandManager().register(this, copysign, "copysign");		
 		
 		//done
-		logger.info(toColor("SignEditor: [&aSignEditor enabled!&r]"));
+		logger.info(toColor("&aSignEditor enabled!"));
 	}
 	
 	@Listener
 	public void onStopServer(GameStoppingServerEvent e) {
-		logger.info(toColor("SignEditor: [&4SignEditor disabled!&r]"));
+		logger.info(toColor("&4SignEditor disabled!"));
 	}
 	
 	@Listener
@@ -148,8 +169,7 @@ public class SignEditor {
 				}
 				event.setCancelled(true);
 			}
-		}
-		
+		}		
 	}
 	
 	public static Text toText(String str){
