@@ -26,7 +26,7 @@ import com.google.inject.Inject;
 
 @Plugin(id = "signeditor", 
 name = "SignEditor", 
-version = "1.0.3",
+version = "1.0.4",
 authors="FabioZumbi12", 
 description="Simple tool to edit sign lines.")
 public class SignEditor {
@@ -177,6 +177,6 @@ public class SignEditor {
     }
 	
 	public static String toColor(String str){
-    	return str.replaceAll("(&([a-fk-or0-9]))", "\u00A7$2"); 
+    	return str.replaceAll("(&([AFa-fK-Ok-orR0-9]))", "\u00A7$2");
     }
 }
