@@ -26,7 +26,7 @@ import com.google.inject.Inject;
 
 @Plugin(id = "signeditor", 
 name = "SignEditor", 
-version = "1.0.4",
+version = "1.0.5",
 authors="FabioZumbi12", 
 description="Simple tool to edit sign lines.")
 public class SignEditor {
@@ -47,7 +47,7 @@ public class SignEditor {
 			    .description(Text.of("Main command for SignEdit."))
 			    .arguments(GenericArguments.optional(GenericArguments.string(Text.of("?"))))
 			    .executor((src, args) -> {
-			    	src.sendMessage(toText("&b---------------- SignEditor v1.0.3 ----------------"));
+			    	src.sendMessage(toText("&b---------------- SignEditor v1.0.5 ----------------"));
 			    	src.sendMessage(toText("&bDeveloped by FabioZumbi12."));
 			    	src.sendMessage(toText("&bFor more information about the commands, type [&6/signedit ?&b]."));
 			    	src.sendMessage(toText("&b---------------------------------------------------"));
@@ -129,8 +129,9 @@ public class SignEditor {
     public void onInteractBlock(InteractBlockEvent event, @First Player p) {
 		String type = event.getTargetBlock().getState().getType().getName();
 		if (type.endsWith("_sign")){
-			if (lines.containsKey(p.getName())){				
+			if (lines.containsKey(p.getName())){
 				TileEntity signEntity = event.getTargetBlock().getLocation().get().getTileEntity().get();
+				if (!signEntity.get(SignData.class).isPresent()) return;
 				SignData data = signEntity.get(SignData.class).get();
 				
 				int linex = -1;

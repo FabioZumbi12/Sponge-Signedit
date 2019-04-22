@@ -4,14 +4,14 @@
 
   <groupId>br.net.fabiozumbi12</groupId>
   <artifactId>SignEditor</artifactId>
-  <version>1.0.4</version>
+  <version>1.0.5</version>
   <packaging>jar</packaging>
 
   <name>SignEditor</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <spongeVersion>8.0.0-SNAPSHOT</spongeVersion>
+    <spongeVersion>7.1.0-SNAPSHOT</spongeVersion>
   </properties>
 
   <scm>
@@ -59,7 +59,7 @@
           <target>1.8</target>
         </configuration>        
       </plugin>
-     
+
     <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>buildnumber-maven-plugin</artifactId>
